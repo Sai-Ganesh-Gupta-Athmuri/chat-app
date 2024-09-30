@@ -8,7 +8,7 @@ import upload  from '../../lib/upload'
 
 const ChatBox = () => {
 
-    const {userData, messagesId, chatUser, messages, setMessages} = useContext(AppContext);
+    const {userData, messagesId, chatUser, messages, setMessages, chatVisual, setChatVisual} = useContext(AppContext);
     const [input,setInput] = useState("");
 
     const sendMessage = async () => {
@@ -106,11 +106,12 @@ const ChatBox = () => {
     },[messagesId])
 
   return chatUser ? (
-    <div className='chat-box'>
+    <div className={`chat-box ${chatVisual ? "" : "hidden" }`}>
         <div className="chat-user">
             <img src={chatUser.userData.avatar} alt="" />
-            <p>{chatUser.userData.name} <img className='dot' src={assets.green_dot} alt="" /></p>
+            <p>{chatUser.userData.name} {Date.now() - chatUser.userData.lastSeen <= 70000 ? <img className='dot' src={assets.green_dot} alt='' /> : null}</p>
             <img src={assets.help_icon} className='help' alt="" />
+            <img onClick={() => setChatVisual(false)} src={assets.arrow_icon} className='arrow' alt="" />
         </div>
 
         <div className="chat-msg">
@@ -144,7 +145,7 @@ const ChatBox = () => {
         </div>
     </div>
   )
-  : <div className='chat-welcome'>
+  : <div className={`chat-welcome ${chatVisual ? "" : "hidden" }`}>
         <img src={assets.logo_icon} alt="" />
         <p>Chat Anytime, Anywhere......</p>
   </div>
